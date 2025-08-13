@@ -122,6 +122,14 @@
           navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
           slidesPerView: 1,
           spaceBetween: 10,
+          on: {
+            slideChange: function () {
+              let index = this.realIndex; // índice real de la imagen actual
+              if (window.AppInventor && window.AppInventor.setWebViewString) {
+                window.AppInventor.setWebViewString("imagen:" + index);
+              }
+            }
+          }
         });
 
       } catch (error) {
