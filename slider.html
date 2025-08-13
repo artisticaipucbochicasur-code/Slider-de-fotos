@@ -1,95 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1e1e1e, #111);
+      background: #111;
       font-family: Arial, sans-serif;
       color: white;
     }
     .swiper {
       width: 100vw;
       height: 70vw;
-      max-height: 500px;
     }
     .swiper-slide {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       padding: 10px;
     }
     .swiper-slide img {
       width: 100%;
       height: auto;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: transform 0.3s ease;
-    }
-    .swiper-slide img:hover {
-      transform: scale(1.05);
+      border-radius: 12px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
     }
     .title {
-      font-size: 1.2em;
-      font-weight: bold;
       margin-top: 8px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-align: center;
     }
-    .desc {
+    .description {
       font-size: 0.9em;
       opacity: 0.8;
-    }
-    .swiper-button-next, .swiper-button-prev {
-      color: white;
-    }
-    .swiper-pagination-bullet {
-      background: white;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <div class="swiper">
-    <div class="swiper-wrapper" id="slides-container">
-      <!-- Las imágenes se insertarán aquí -->
-    </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
+<div class="swiper">
+  <div class="swiper-wrapper" id="slides-container">
+    <!-- Aquí se insertarán las imágenes dinámicamente -->
   </div>
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    const dataURL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  // URL de tu script de Google Apps
+  const dataUrl = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
 
-    fetch(dataURL)
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('slides-container');
-        data.forEach(item => {
+  fetch(dataUrl)
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('slides-container');
+
+      data.forEach(item => {
+        if (item.Imagen) {
+          // Convertir el link al formato que funciona
+          let idMatch = item.Imagen.match(/id=([a-zA-Z0-9_-]+)/);
+          let imageUrl = idMatch ? `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000` : item.Imagen;
+
+          // Crear el slide
           const slide = document.createElement('div');
-          slide.className = 'swiper-slide';
+          slide.classList.add('swiper-slide');
           slide.innerHTML = `
-            <img src="${item.Imagen}" alt="${item.Titulo}">
-            <div class="title">${item.Titulo}</div>
-            <div class="desc">${item.Descripción || ''}</div>
+            <img src="${imageUrl}" alt="${item.Titulo}">
+            <div class="title">${item.Titulo || ''}</div>
+            <div class="description">${item.Descripción || ''}</div>
           `;
           container.appendChild(slide);
-        });
+        }
+      });
 
-        new Swiper('.swiper', {
-          loop: true,
-          pagination: { el: '.swiper-pagination', clickable: true },
-          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-          slidesPerView: 1,
-          spaceBetween: 15
-        });
-      })
-      .catch(error => console.error('Error al cargar datos:', error));
-  </script>
+      // Inicializar Swiper después de cargar las imágenes
+      new Swiper('.swiper', {
+        loop: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        slidesPerView: 1,
+        spaceBetween: 10,
+      });
+    })
+    .catch(error => console.error("Error cargando datos:", error));
+</script>
 
 </body>
 </html>
