@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <title>Carrusel</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
     body {
@@ -22,11 +21,11 @@
       max-width: 800px;
       height: 60vh;
     }
-    .swiper-slide {
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      border-radius: 15px;
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     .swiper-pagination-bullet {
@@ -41,9 +40,9 @@
 <body>
   <div class="swiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl');"></div>
-      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=15ltj0o3JdMaKSh1ARxwNNodNzP_gzIuT');"></div>
-      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=1V7Je4OLOCPKgjd6xdVJmxd_nKkx-QmR_');"></div>
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl" alt="Imagen 1"></div>
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=15ltj0o3JdMaKSh1ARxwNNodNzP_gzIuT" alt="Imagen 2"></div>
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1V7Je4OLOCPKgjd6xdVJmxd_nKkx-QmR_" alt="Imagen 3"></div>
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-prev"></div>
