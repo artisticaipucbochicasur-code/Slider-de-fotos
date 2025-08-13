@@ -20,19 +20,14 @@
     .swiper {
       width: 90vw;
       max-width: 800px;
-      height: auto;
+      height: 60vh;
     }
     .swiper-slide {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .swiper-slide img {
-      max-width: 100%;
-      height: auto;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      display: block;
     }
     .swiper-pagination-bullet {
       background: #fff;
@@ -46,15 +41,9 @@
 <body>
   <div class="swiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/uc?export=download&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl" alt="Imagen 1">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/uc?export=download&id=15ltj0o3JdMaKSh1ARxwNNodNzP_gzIuT" alt="Imagen 2">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/uc?export=download&id=1V7Je4OLOCPKgjd6xdVJmxd_nKkx-QmR_" alt="Imagen 3">
-      </div>
+      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl');"></div>
+      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=15ltj0o3JdMaKSh1ARxwNNodNzP_gzIuT');"></div>
+      <div class="swiper-slide" style="background-image:url('https://drive.google.com/uc?export=view&id=1V7Je4OLOCPKgjd6xdVJmxd_nKkx-QmR_');"></div>
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-prev"></div>
