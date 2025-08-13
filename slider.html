@@ -7,84 +7,54 @@
     body {
       margin: 0;
       padding: 0;
-      background: #1a1a1a;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: white;
     }
-
     .swiper {
       width: 100vw;
       height: 100vh;
-      background: black;
     }
-
     .swiper-slide {
       display: flex;
       justify-content: center;
       align-items: center;
-      background: black;
       position: relative;
+      background: #000;
     }
-
-    .image-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: black;
-    }
-
     .swiper-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Imagen completa, sin recortes */
-      background: black;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
-
-    /* Overlay de texto */
-    .text-overlay {
+    /* Overlay inferior para texto */
+    .overlay {
       position: absolute;
       bottom: 0;
-      left: 0;
       width: 100%;
-      padding: 15px;
-      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
-      color: white;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      padding: 12px;
       box-sizing: border-box;
     }
-
-    .text-overlay h2 {
-      margin: 0;
-      font-size: 1.2em;
+    .titulo {
+      font-size: 18px;
       font-weight: bold;
+      margin-bottom: 4px;
     }
-
-    .text-overlay p {
-      margin: 4px 0;
-      font-size: 0.9em;
-      color: #ddd;
+    .descripcion {
+      font-size: 14px;
+      margin-bottom: 8px;
+      opacity: 0.9;
     }
-
-    .comments {
-      margin-top: 6px;
-      font-size: 0.85em;
-      color: #bbb;
-      line-height: 1.3em;
+    .comentarios {
+      font-size: 13px;
+      opacity: 0.85;
+      border-top: 1px solid rgba(255,255,255,0.3);
+      padding-top: 6px;
     }
-
-    /* Paginación y botones */
-    .swiper-pagination-bullet { background: #777; opacity: 0.8; }
-    .swiper-pagination-bullet-active { background: #fff; opacity: 1; }
-    .swiper-button-prev, .swiper-button-next { color: #fff; opacity: 0.7; }
-    .swiper-button-prev:hover, .swiper-button-next:hover { opacity: 1; }
+    .comentario {
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -94,12 +64,12 @@
     <div class="swiper-button-prev"></div>
     <div class="swiper-button-next"></div>
   </div>
-
+  
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
 
-    async function cargarAnuncios() {
+    async function cargarImagenes() {
       try {
         const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -107,56 +77,59 @@
         const data = await response.json();
         const swiperWrapper = document.querySelector('.swiper-wrapper');
         
-        data.anuncios.forEach((anuncio, index) => {
-          const swiperSlide = document.createElement('div');
-          swiperSlide.classList.add('swiper-slide');
-
-          const imageContainer = document.createElement('div');
-          imageContainer.classList.add('image-container');
+        data.anuncios.forEach((anuncio) => {
+          const slide = document.createElement('div');
+          slide.classList.add('swiper-slide');
 
           const img = document.createElement('img');
           img.src = anuncio.url;
-          img.alt = anuncio.titulo || `Imagen ${index + 1}`;
+          img.alt = anuncio.titulo;
 
-          const textOverlay = document.createElement('div');
-          textOverlay.classList.add('text-overlay');
+          const overlay = document.createElement('div');
+          overlay.classList.add('overlay');
 
-          const titulo = document.createElement('h2');
-          titulo.textContent = anuncio.titulo || '';
+          const titulo = document.createElement('div');
+          titulo.classList.add('titulo');
+          titulo.textContent = anuncio.titulo;
 
-          const descripcion = document.createElement('p');
-          descripcion.textContent = anuncio.descripcion || '';
+          const descripcion = document.createElement('div');
+          descripcion.classList.add('descripcion');
+          descripcion.textContent = anuncio.descripcion;
 
-          const comentarios = document.createElement('div');
-          comentarios.classList.add('comments');
+          const comentariosDiv = document.createElement('div');
+          comentariosDiv.classList.add('comentarios');
           if (Array.isArray(anuncio.comentarios) && anuncio.comentarios.length > 0) {
-            comentarios.innerHTML = anuncio.comentarios.map(c => `• ${c}`).join('<br>');
+            anuncio.comentarios.forEach(com => {
+              const p = document.createElement('div');
+              p.classList.add('comentario');
+              p.textContent = `• ${com}`;
+              comentariosDiv.appendChild(p);
+            });
           }
 
-          textOverlay.appendChild(titulo);
-          textOverlay.appendChild(descripcion);
-          textOverlay.appendChild(comentarios);
+          overlay.appendChild(titulo);
+          overlay.appendChild(descripcion);
+          overlay.appendChild(comentariosDiv);
 
-          imageContainer.appendChild(img);
-          imageContainer.appendChild(textOverlay);
-          swiperSlide.appendChild(imageContainer);
-          swiperWrapper.appendChild(swiperSlide);
+          slide.appendChild(img);
+          slide.appendChild(overlay);
+          swiperWrapper.appendChild(slide);
         });
 
         new Swiper('.swiper', {
           loop: true,
-          pagination: { el: '.swiper-pagination' },
+          pagination: { el: '.swiper-pagination', clickable: true },
           navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
           slidesPerView: 1,
           spaceBetween: 10,
         });
 
       } catch (error) {
-        console.error("Error al cargar los anuncios:", error);
+        console.error("Error al cargar las imágenes:", error);
       }
     }
 
-    cargarAnuncios();
+    cargarImagenes();
   </script>
 </body>
 </html>
