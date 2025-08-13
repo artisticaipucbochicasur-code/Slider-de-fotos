@@ -116,7 +116,7 @@
           swiperWrapper.appendChild(slide);
         });
 
-        new Swiper('.swiper', {
+        const swiper = new Swiper('.swiper', {
           loop: true,
           pagination: { el: '.swiper-pagination', clickable: true },
           navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
@@ -124,13 +124,20 @@
           spaceBetween: 10,
           on: {
             slideChange: function () {
-              let index = this.realIndex; // índice real de la imagen actual
-              if (window.AppInventor && window.AppInventor.setWebViewString) {
-                window.AppInventor.setWebViewString("imagen:" + index);
+              const currentIndex = swiper.realIndex;
+              const anuncioActual = data.anuncios[currentIndex];
+              // Enviar datos a App Inventor
+              if (window.AppInventor) {
+                window.AppInventor.setWebViewString(JSON.stringify(anuncioActual));
               }
             }
           }
         });
+
+        // Enviar el primer anuncio al cargar
+        if (window.AppInventor) {
+          window.AppInventor.setWebViewString(JSON.stringify(data.anuncios[0]));
+        }
 
       } catch (error) {
         console.error("Error al cargar las imágenes:", error);
