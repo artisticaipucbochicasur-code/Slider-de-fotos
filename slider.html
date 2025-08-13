@@ -4,34 +4,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
-    body { margin: 0; padding: 0; }
-    .swiper { width: 100vw; height: 70vw; }
-    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .swiper {
+      width: 90vw;
+      max-width: 600px;
+      height: auto;
+    }
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .swiper-slide img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .swiper-pagination-bullet {
+      background: #fff;
+      opacity: 0.8;
+    }
+    .swiper-pagination-bullet-active {
+      background: #007aff;
+    }
   </style>
 </head>
 <body>
   <div class="swiper">
     <div class="swiper-wrapper">
-      <!-- Aquí van los slides, uno por imagen -->
-      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1ebzIyz1zOi7U5vkjU85fsqWTZ0gokSgb" /></div>
-      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1HLNOYCHtkRoUmIZBgrJpMGKesZo7q7k_" /></div>
-      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl" /></div>
-      <!-- ... -->
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1wuPu7t27eaONqsXGwZcHDk-t_w69B4Xl" alt="Imagen 1" /></div>
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1uMOhpdsJF-TxNKDhoCfk7IQmX9Irz37I" alt="Imagen 2" /></div>
+      <div class="swiper-slide"><img src="https://drive.google.com/uc?export=view&id=1HLNOYCHtkRoUmIZBgrJpMGKesZo7q7k_" alt="Imagen 3" /></div>
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-prev"></div>
     <div class="swiper-button-next"></div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     new Swiper('.swiper', {
       loop: true,
-      pagination: { el: '.swiper-pagination' },
+      pagination: { el: '.swiper-pagination', clickable: true },
       navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
       slidesPerView: 1,
-      spaceBetween: 10,
+      spaceBetween: 20,
     });
   </script>
 </body>
-
 </html>
