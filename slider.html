@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galería</title>
+  <title>Anuncios</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
     body {
@@ -29,24 +29,13 @@
       border-radius: 12px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
     }
-    .title {
-      margin-top: 8px;
-      font-size: 1.1em;
-      font-weight: bold;
-      text-align: center;
-    }
-    .description {
-      font-size: 0.9em;
-      opacity: 0.8;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
 
 <div class="swiper">
   <div class="swiper-wrapper" id="slides-container">
-    <!-- Aquí se insertarán las imágenes dinámicamente -->
+    <!-- Se insertan imágenes aquí -->
   </div>
   <div class="swiper-pagination"></div>
   <div class="swiper-button-prev"></div>
@@ -55,33 +44,30 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  // URL de tu script de Google Apps
-  const dataUrl = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
+  // URL de tu script que devuelve los datos de la hoja "Anuncios"
+  const dataUrl = "https://script.google.com/macros/s/TU_SCRIPT_ID/exec?accion=getAnuncios";
 
   fetch(dataUrl)
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
       const container = document.getElementById('slides-container');
 
-      data.forEach(item => {
-        if (item.Imagen) {
-          // Convertir el link al formato que funciona
-          let idMatch = item.Imagen.match(/id=([a-zA-Z0-9_-]+)/);
-          let imageUrl = idMatch ? `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000` : item.Imagen;
-
-          // Crear el slide
-          const slide = document.createElement('div');
-          slide.classList.add('swiper-slide');
-          slide.innerHTML = `
-            <img src="${imageUrl}" alt="${item.Titulo}">
-            <div class="title">${item.Titulo || ''}</div>
-            <div class="description">${item.Descripción || ''}</div>
-          `;
-          container.appendChild(slide);
+      data.forEach(row => {
+        let link = row[2]; // Columna 3 (índice 2 porque empieza en 0)
+        if (link) {
+          // Extraer ID de Google Drive
+          let idMatch = link.match(/[-\w]{25,}/);
+          if (idMatch) {
+            let imageUrl = `https://drive.google.com/thumbnail?id=${idMatch[0]}&sz=w1000`;
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
+            slide.innerHTML = `<img src="${imageUrl}" alt="Imagen">`;
+            container.appendChild(slide);
+          }
         }
       });
 
-      // Inicializar Swiper después de cargar las imágenes
+      // Iniciar Swiper
       new Swiper('.swiper', {
         loop: true,
         pagination: { el: '.swiper-pagination', clickable: true },
@@ -90,7 +76,7 @@
         spaceBetween: 10,
       });
     })
-    .catch(error => console.error("Error cargando datos:", error));
+    .catch(err => console.error("Error cargando datos:", err));
 </script>
 
 </body>
