@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <style>
-    body { margin: 0; padding: 0; background: #111; }
-    .swiper { width: 100vw; height: 70vw; }
-    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <style>
+    body { margin: 0; padding: 0; background: #111; }
+    .swiper { width: 100vw; height: 70vw; }
+    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
+  </style>
 </head>
 <body>
-  <div class="swiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/file/d/1ebzIyz1zOi7U5vkjU85fsqWTZ0gokSgb/view?usp=sharing" alt="Imagen 1">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/file/d/1cIP5alR4w3zmvMdielMAXZj_eYWtp4_R/view?usp=sharing" alt="Imagen 2">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/file/d/1q-3fgMWSc0nRl36fGUaY1rrf9TrOdOPY/view?usp=sharing" alt="Imagen 3">
-      </div>
-    </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    new Swiper('.swiper', {
-      loop: true,
-      pagination: { el: '.swiper-pagination' },
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-      slidesPerView: 1,
-      spaceBetween: 10,
-    });
-  </script>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/uc?export=view&id=1ebzIyz1zOi7U5vkjU85fsqWTZ0gokSgb" alt="Imagen 1">
+      </div>
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/uc?export=view&id=1cIP5alR4w3zmvMdielMAXZj_eYWtp4_R" alt="Imagen 2">
+      </div>
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/uc?export=view&id=1q-3fgMWSc0nRl36fGUaY1rrf9TrOdOPY" alt="Imagen 3">
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    new Swiper('.swiper', {
+      loop: true,
+      pagination: { el: '.swiper-pagination' },
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+      slidesPerView: 1,
+      spaceBetween: 10,
+    });
+  </script>
 </body>
 </html>
-
-
