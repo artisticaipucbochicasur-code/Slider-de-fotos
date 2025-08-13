@@ -45,18 +45,18 @@
     .swiper-slide img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Para que no se corte */
+      object-fit: contain; /* Imagen completa, sin recortes */
       background: black;
     }
 
-    /* Overlay de texto sobre la imagen */
+    /* Overlay de texto */
     .text-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       padding: 15px;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
       color: white;
       box-sizing: border-box;
     }
@@ -68,15 +68,22 @@
     }
 
     .text-overlay p {
-      margin: 5px 0 0;
+      margin: 4px 0;
       font-size: 0.9em;
       color: #ddd;
     }
 
+    .comments {
+      margin-top: 6px;
+      font-size: 0.85em;
+      color: #bbb;
+      line-height: 1.3em;
+    }
+
     /* Paginación y botones */
-    .swiper-pagination-bullet { background: #555; opacity: 0.8; }
-    .swiper-pagination-bullet-active { background: #eee; opacity: 1; }
-    .swiper-button-prev, .swiper-button-next { color: #eee; opacity: 0.7; }
+    .swiper-pagination-bullet { background: #777; opacity: 0.8; }
+    .swiper-pagination-bullet-active { background: #fff; opacity: 1; }
+    .swiper-button-prev, .swiper-button-next { color: #fff; opacity: 0.7; }
     .swiper-button-prev:hover, .swiper-button-next:hover { opacity: 1; }
   </style>
 </head>
@@ -120,8 +127,15 @@
           const descripcion = document.createElement('p');
           descripcion.textContent = anuncio.descripcion || '';
 
+          const comentarios = document.createElement('div');
+          comentarios.classList.add('comments');
+          if (Array.isArray(anuncio.comentarios) && anuncio.comentarios.length > 0) {
+            comentarios.innerHTML = anuncio.comentarios.map(c => `• ${c}`).join('<br>');
+          }
+
           textOverlay.appendChild(titulo);
           textOverlay.appendChild(descripcion);
+          textOverlay.appendChild(comentarios);
 
           imageContainer.appendChild(img);
           imageContainer.appendChild(textOverlay);
