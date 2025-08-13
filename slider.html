@@ -1,40 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <style>
-    body { margin: 0; padding: 0; background: #111; }
-    .swiper { width: 100vw; height: 70vw; }
-    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .swiper { 
+      width: 95vw; 
+      max-width: 800px;
+      height: auto; 
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    .swiper-slide img { 
+      width: 100%; 
+      height: auto; 
+      border-radius: 16px;
+      display: block;
+    }
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: white;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .swiper-pagination-bullet {
+      background: white;
+      opacity: 0.6;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+  </style>
 </head>
 <body>
-  <div class="swiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/thumbnail?id=1ebzIyz1zOi7U5vkjU85fsqWTZ0gokSgb&sz=w1000" alt="Imagen 1">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/thumbnail?id=1cIP5alR4w3zmvMdielMAXZj_eYWtp4_R&sz=w1000" alt="Imagen 2">
-      </div>
-      <div class="swiper-slide">
-        <img src="https://drive.google.com/thumbnail?id=1q-3fgMWSc0nRl36fGUaY1rrf9TrOdOPY&sz=w1000" alt="Imagen 3">
-      </div>
-    </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    new Swiper('.swiper', {
-      loop: true,
-      pagination: { el: '.swiper-pagination' },
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-      slidesPerView: 1,
-      spaceBetween: 10,
-    });
-  </script>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/thumbnail?id=1ebzIyz1zOi7U5vkjU85fsqWTZ0gokSgb&sz=w1000" alt="Imagen 1">
+      </div>
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/thumbnail?id=1cIP5alR4w3zmvMdielMAXZj_eYWtp4_R&sz=w1000" alt="Imagen 2">
+      </div>
+      <div class="swiper-slide">
+        <img src="https://drive.google.com/thumbnail?id=1q-3fgMWSc0nRl36fGUaY1rrf9TrOdOPY&sz=w1000" alt="Imagen 3">
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    new Swiper('.swiper', {
+      loop: true,
+      pagination: { 
+        el: '.swiper-pagination',
+        clickable: true
+      },
+      navigation: { 
+        nextEl: '.swiper-button-next', 
+        prevEl: '.swiper-button-prev' 
+      },
+      slidesPerView: 1,
+      spaceBetween: 10,
+      effect: 'slide',
+      speed: 600
+    });
+  </script>
 </body>
 </html>
