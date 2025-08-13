@@ -1,83 +1,66 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anuncios</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #111;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
-    .swiper {
-      width: 100vw;
-      height: 70vw;
-    }
-    .swiper-slide {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-    }
-    .swiper-slide img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <style>
+    body { margin: 0; padding: 0; background: #111; }
+    .swiper { width: 100vw; height: 70vw; }
+    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
+  </style>
 </head>
 <body>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+          </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // ⚠️ REEMPLAZA ESTA URL con la URL de tu nueva implementación de Apps Script
+    const SCRIPT_URL = "URL_DE_TU_SCRIPT_AQUI"; 
 
-<div class="swiper">
-  <div class="swiper-wrapper" id="slides-container">
-    <!-- Se insertan imágenes aquí -->
-  </div>
-  <div class="swiper-pagination"></div>
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-button-next"></div>
-</div>
+    // Función para obtener y cargar las imágenes
+    async function cargarImagenes() {
+      try {
+        const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        const swiperWrapper = document.querySelector('.swiper-wrapper');
+        
+        data.urls.forEach((url, index) => {
+          const swiperSlide = document.createElement('div');
+          swiperSlide.classList.add('swiper-slide');
+          
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = `Imagen ${index + 1}`;
+          
+          swiperSlide.appendChild(img);
+          swiperWrapper.appendChild(swiperSlide);
+        });
+        
+        // Inicializar Swiper después de que las imágenes se hayan cargado
+        new Swiper('.swiper', {
+          loop: true,
+          pagination: { el: '.swiper-pagination' },
+          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+          slidesPerView: 1,
+          spaceBetween: 10,
+        });
+        
+      } catch (error) {
+        console.error("Error al cargar las imágenes:", error);
+      }
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-  // URL de tu script que devuelve los datos de la hoja "Anuncios"
-  const dataUrl = "https://script.google.com/macros/s/TU_SCRIPT_ID/exec?accion=getAnuncios";
-
-  fetch(dataUrl)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('slides-container');
-
-      data.forEach(row => {
-        let link = row[2]; // Columna 3 (índice 2 porque empieza en 0)
-        if (link) {
-          // Extraer ID de Google Drive
-          let idMatch = link.match(/[-\w]{25,}/);
-          if (idMatch) {
-            let imageUrl = `https://drive.google.com/thumbnail?id=${idMatch[0]}&sz=w1000`;
-            const slide = document.createElement('div');
-            slide.classList.add('swiper-slide');
-            slide.innerHTML = `<img src="${imageUrl}" alt="Imagen">`;
-            container.appendChild(slide);
-          }
-        }
-      });
-
-      // Iniciar Swiper
-      new Swiper('.swiper', {
-        loop: true,
-        pagination: { el: '.swiper-pagination', clickable: true },
-        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-        slidesPerView: 1,
-        spaceBetween: 10,
-      });
-    })
-    .catch(err => console.error("Error cargando datos:", err));
-</script>
-
+    cargarImagenes();
+  </script>
 </body>
 </html>
