@@ -13,8 +13,7 @@
 
     .swiper {
       width: 100vw; 
-      height: 56.25vw; /* Mantiene relación 16:9 */
-      max-height: 100vh;
+      height: 100vh; /* ocupa toda la altura del móvil */
     }
 
     .swiper-slide {
@@ -24,9 +23,10 @@
     }
 
     .swiper-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Mantiene proporciones */
+      width: 90%; /* margen lateral */
+      height: auto;
+      max-height: 90vh; /* evita que salga de pantalla */
+      object-fit: contain; /* mantiene proporción */
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.5);
       transition: transform 0.3s ease;
@@ -101,7 +101,7 @@
           pagination: { el: '.swiper-pagination', clickable: true },
           navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
           slidesPerView: 1,
-          spaceBetween: 10,
+          spaceBetween: 20,
         });
 
       } catch (error) {
