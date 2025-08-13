@@ -7,96 +7,77 @@
     body {
       margin: 0;
       padding: 0;
-      background: #111;
+      background: #1a1a1a;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #e0e0e0;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow: hidden;
     }
 
     .swiper {
       width: 100vw;
-      max-width: 480px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-    }
-    
-    /* Contenedor de cada slide */
-    .swiper-slide {
-      background: #1b1b1b;
-      display: flex;
-      flex-direction: column;
+      height: 100vh;
+      background: black;
     }
 
-    /* Imagen con ratio 16:9 */
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      position: relative;
+    }
+
     .image-container {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 */
+      height: 100%;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
     }
 
-    .image-container img {
-      position: absolute;
-      top: 0; left: 0;
+    .swiper-slide img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* Para que no se corte */
+      background: black;
     }
 
-    /* Tarjeta de texto */
-    .text-card {
+    /* Overlay de texto sobre la imagen */
+    .text-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
       padding: 15px;
-      background-color: #222;
-      border-top: 1px solid #333;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+      color: white;
+      box-sizing: border-box;
     }
 
-    .text-card h2 {
-      margin: 0 0 8px;
-      font-size: 1.3em;
-      color: #fff;
+    .text-overlay h2 {
+      margin: 0;
+      font-size: 1.2em;
+      font-weight: bold;
     }
 
-    .description {
-      margin-bottom: 10px;
-      font-style: italic;
-      color: #b0b0b0;
-    }
-
-    .comments-section {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid #444;
-    }
-
-    .comments-section p {
-      margin: 0 0 6px;
-    }
-
-    .comment {
-      background-color: #333;
-      padding: 8px;
-      border-radius: 8px;
+    .text-overlay p {
+      margin: 5px 0 0;
       font-size: 0.9em;
-      line-height: 1.3;
+      color: #ddd;
     }
 
-    /* Swiper botones y paginación */
-    .swiper-pagination-bullet { background: #666; opacity: 0.8; }
-    .swiper-pagination-bullet-active { background: #fff; opacity: 1; }
-    .swiper-button-prev, .swiper-button-next {
-      color: #fff;
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    .swiper-button-prev:hover, .swiper-button-next:hover {
-      opacity: 1;
-    }
+    /* Paginación y botones */
+    .swiper-pagination-bullet { background: #555; opacity: 0.8; }
+    .swiper-pagination-bullet-active { background: #eee; opacity: 1; }
+    .swiper-button-prev, .swiper-button-next { color: #eee; opacity: 0.7; }
+    .swiper-button-prev:hover, .swiper-button-next:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -115,53 +96,36 @@
       try {
         const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
         const data = await response.json();
-
         const swiperWrapper = document.querySelector('.swiper-wrapper');
-
+        
         data.anuncios.forEach((anuncio, index) => {
           const swiperSlide = document.createElement('div');
           swiperSlide.classList.add('swiper-slide');
 
-          // Imagen
           const imageContainer = document.createElement('div');
           imageContainer.classList.add('image-container');
+
           const img = document.createElement('img');
           img.src = anuncio.url;
           img.alt = anuncio.titulo || `Imagen ${index + 1}`;
-          imageContainer.appendChild(img);
 
-          // Tarjeta de texto
-          const textCard = document.createElement('div');
-          textCard.classList.add('text-card');
+          const textOverlay = document.createElement('div');
+          textOverlay.classList.add('text-overlay');
 
           const titulo = document.createElement('h2');
           titulo.textContent = anuncio.titulo || '';
 
           const descripcion = document.createElement('p');
-          descripcion.classList.add('description');
           descripcion.textContent = anuncio.descripcion || '';
 
-          const commentsSection = document.createElement('div');
-          commentsSection.classList.add('comments-section');
-          if (anuncio.comentarios) {
-            const comentariosArray = anuncio.comentarios.split('\n\n');
-            comentariosArray.forEach(comentario => {
-              if (comentario.trim() !== '') {
-                const p = document.createElement('p');
-                p.classList.add('comment');
-                p.textContent = comentario;
-                commentsSection.appendChild(p);
-              }
-            });
-          }
+          textOverlay.appendChild(titulo);
+          textOverlay.appendChild(descripcion);
 
-          textCard.appendChild(titulo);
-          textCard.appendChild(descripcion);
-          textCard.appendChild(commentsSection);
-
+          imageContainer.appendChild(img);
+          imageContainer.appendChild(textOverlay);
           swiperSlide.appendChild(imageContainer);
-          swiperSlide.appendChild(textCard);
           swiperWrapper.appendChild(swiperSlide);
         });
 
