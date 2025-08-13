@@ -27,7 +27,6 @@
       max-height: 100%;
       object-fit: contain;
     }
-    /* Overlay inferior para texto */
     .overlay {
       position: absolute;
       bottom: 0;
@@ -68,6 +67,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
+    let anunciosData = [];
 
     async function cargarImagenes() {
       try {
@@ -75,9 +75,10 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        anunciosData = data.anuncios;
         const swiperWrapper = document.querySelector('.swiper-wrapper');
         
-        data.anuncios.forEach((anuncio) => {
+        anunciosData.forEach((anuncio) => {
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
 
@@ -118,29 +119,30 @@
 
         const swiper = new Swiper('.swiper', {
           loop: true,
+          direction: 'vertical', // 📌 vertical para celular
           pagination: { el: '.swiper-pagination', clickable: true },
           navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
           slidesPerView: 1,
           spaceBetween: 10,
-          on: {
-            slideChange: function () {
-              const currentIndex = swiper.realIndex;
-              const anuncioActual = data.anuncios[currentIndex];
-              // Enviar datos a App Inventor
-              if (window.AppInventor) {
-                window.AppInventor.setWebViewString(JSON.stringify(anuncioActual));
-              }
-            }
-          }
         });
 
-        // Enviar el primer anuncio al cargar
-        if (window.AppInventor) {
-          window.AppInventor.setWebViewString(JSON.stringify(data.anuncios[0]));
-        }
+        // 📌 Enviar el primer anuncio
+        enviarDatosAAppInventor(0);
+
+        // 📌 Enviar datos cada vez que cambia el slide
+        swiper.on('slideChange', () => {
+          const realIndex = swiper.realIndex;
+          enviarDatosAAppInventor(realIndex);
+        });
 
       } catch (error) {
         console.error("Error al cargar las imágenes:", error);
+      }
+    }
+
+    function enviarDatosAAppInventor(index) {
+      if (window.AppInventor && anunciosData[index]) {
+        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[index]));
       }
     }
 
