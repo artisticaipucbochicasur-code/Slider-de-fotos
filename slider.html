@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <style>
+    body { margin: 0; padding: 0; }
+    .swiper { width: 100vw; height: 70vw; }
+    .swiper-slide img { width: 100%; height: auto; border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <!-- Aquí van los slides, uno por imagen -->
+      <div class="swiper-slide"><img src="LINK_1" /></div>
+      <div class="swiper-slide"><img src="LINK_2" /></div>
+      <div class="swiper-slide"><img src="LINK_3" /></div>
+      <!-- ... -->
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    new Swiper('.swiper', {
+      loop: true,
+      pagination: { el: '.swiper-pagination' },
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+      slidesPerView: 1,
+      spaceBetween: 10,
+    });
+  </script>
+</body>
+</html>
