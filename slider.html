@@ -57,13 +57,15 @@
         anunciosData = data.anuncios;
         const swiperWrapper = document.querySelector('.swiper-wrapper');
 
+        const currentIndex = swiperInstance ? swiperInstance.realIndex : 0; // 📌 Guardar el índice actual
+
         // Limpiar slides existentes antes de volver a cargarlos
         swiperWrapper.innerHTML = '';
         
         anunciosData.forEach((anuncio) => {
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
-          slide.dataset.anuncio = JSON.stringify(anuncio); // Guardar los datos completos
+          slide.dataset.anuncio = JSON.stringify(anuncio);
           
           const img = document.createElement('img');
           img.src = anuncio.url;
@@ -89,6 +91,8 @@
           spaceBetween: 10
         });
 
+        swiperInstance.slideToLoop(currentIndex, 0); // 📌 Restaurar el índice después de la recarga
+
         // 📌 Enviar el primer anuncio
         enviarDatosAAppInventor(swiperInstance.realIndex);
 
@@ -103,14 +107,12 @@
       }
     }
 
-    // 📌 Función para enviar datos a App Inventor
     function enviarDatosAAppInventor(index) {
       if (window.AppInventor && anunciosData[index]) {
         window.AppInventor.setWebViewString(JSON.stringify(anunciosData[index]));
       }
     }
 
-    // 📌 NUEVA FUNCIÓN: Recarga los datos y actualiza el carrusel
     function recargarDatos() {
       cargarImagenes();
     }
