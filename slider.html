@@ -1,17 +1,15 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
       background: #111;
       font-family: Arial, sans-serif;
       color: white;
-      height: 100%;
-      overflow: hidden; /* ❌ Evitar scroll nativo */
     }
     .swiper {
       width: 100vw;
@@ -28,6 +26,14 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+    }
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: none;
+      padding: 0;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -58,20 +64,19 @@
           img.src = anuncio.url;
           img.alt = "";
 
+          const overlay = document.createElement('div');
+          overlay.classList.add('overlay');
+
           slide.appendChild(img);
+          slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
         });
 
         const swiper = new Swiper('.swiper', {
           loop: true,
-          direction: 'vertical',
+          direction: 'horizontal', // 📌 desliza horizontal
           slidesPerView: 1,
-          spaceBetween: 10,
-          allowTouchMove: true, // ✅ Asegura que el toque funcione
-          simulateTouch: true, // ✅ Simula drag con dedo
-          touchAngle: 45, // ✅ Ángulo para permitir swipe vertical
-          pagination: false,
-          navigation: false
+          spaceBetween: 10
         });
 
         // 📌 Enviar el primer anuncio
