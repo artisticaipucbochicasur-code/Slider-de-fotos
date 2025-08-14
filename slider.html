@@ -58,6 +58,7 @@
         const swiperWrapper = document.querySelector('.swiper-wrapper');
 
         const currentIndex = swiperInstance ? swiperInstance.realIndex : 0; // 📌 Guardar el índice actual
+        const newTotalSlides = anunciosData.length;
 
         // Limpiar slides existentes antes de volver a cargarlos
         swiperWrapper.innerHTML = '';
@@ -91,7 +92,9 @@
           spaceBetween: 10
         });
 
-        swiperInstance.slideToLoop(currentIndex, 0); // 📌 Restaurar el índice después de la recarga
+        // 📌 Lógica para restaurar el índice sin errores
+        const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
+        swiperInstance.slideToLoop(newIndex, 0);
 
         // 📌 Enviar el primer anuncio
         enviarDatosAAppInventor(swiperInstance.realIndex);
