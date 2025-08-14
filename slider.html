@@ -31,13 +31,9 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      padding: 12px;
+      background: none;
+      padding: 0;
       box-sizing: border-box;
-    }
-    .titulo {
-      font-size: 18px;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -69,16 +65,11 @@
 
           const img = document.createElement('img');
           img.src = anuncio.url;
-          img.alt = anuncio.titulo;
+          img.alt = "";
 
           const overlay = document.createElement('div');
           overlay.classList.add('overlay');
 
-          const titulo = document.createElement('div');
-          titulo.classList.add('titulo');
-          titulo.textContent = anuncio.titulo;
-
-          overlay.appendChild(titulo);
           slide.appendChild(img);
           slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
