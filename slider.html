@@ -1,88 +1,157 @@
-<script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
-  let anunciosData = [];
-  let swiperInstance = null; // Guardamos la instancia de Swiper aquí
-
-  async function cargarImagenes() {
-    try {
-      const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      
-      const data = await response.json();
-      anunciosData = data.anuncios;
-
-      // 📌 Si no hay anuncios reales, inventamos uno
-      if (!anunciosData || anunciosData.length === 0) {
-        anunciosData = [{
-          titulo: "gf",
-          descripcion: "90",
-          url: "https://drive.google.com/uc?export=view&id=1XBqcfXi4rkF5yvz6E_oHd3lTxc7xN9il",
-          comentarios: "de: Deimer Herrera  holaaaaa 14/8/2025, 1:40:01 p.m. | deimer.herrera91@gmail.com",
-          deleteURL: "1XBqcfXi4rkF5yvz6E_oHd3lTxc7xN9il",
-          autor: "d",
-          correo: "d@gmai.com",
-          fecha: "12/8/2025, 5:54:00 p.m."
-        }];
-      }
-
-      const swiperWrapper = document.querySelector('.swiper-wrapper');
-      const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
-      const newTotalSlides = anunciosData.length;
-
-      swiperWrapper.innerHTML = '';
-      
-      anunciosData.forEach((anuncio) => {
-        const slide = document.createElement('div');
-        slide.classList.add('swiper-slide');
-        slide.dataset.anuncio = JSON.stringify(anuncio);
-        
-        const img = document.createElement('img');
-        img.src = anuncio.url;
-        img.alt = "";
-        
-        const overlay = document.createElement('div');
-        overlay.classList.add('overlay');
-        
-        slide.appendChild(img);
-        slide.appendChild(overlay);
-        swiperWrapper.appendChild(slide);
-      });
-
-      if (swiperInstance) {
-        swiperInstance.destroy(true, true);
-      }
-
-      swiperInstance = new Swiper('.swiper', {
-        loop: true,
-        direction: 'horizontal',
-        slidesPerView: 1,
-        spaceBetween: 10
-      });
-
-      const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
-      swiperInstance.slideToLoop(newIndex, 0);
-
-      enviarDatosAAppInventor(swiperInstance.realIndex);
-
-      swiperInstance.on('slideChange', () => {
-        const realIndex = swiperInstance.realIndex;
-        enviarDatosAAppInventor(realIndex);
-      });
-
-    } catch (error) {
-      console.error("Error al cargar las imágenes:", error);
+<!DOCTYPE html> 
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: white;
     }
-  }
-
-  function enviarDatosAAppInventor(index) {
-    if (window.AppInventor && anunciosData[index]) {
-      window.AppInventor.setWebViewString(JSON.stringify(anunciosData[index]));
+    .swiper {
+      width: 100vw;
+      height: 100vh;
     }
-  }
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background: #000;
+    }
+    .swiper-slide img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: none;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div class="swiper">
+    <div class="swiper-wrapper"></div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
+    let anunciosData = [];
+    let swiperInstance = null; // Guardamos la instancia de Swiper aquí
 
-  function recargarDatos() {
+    async function cargarImagenes() {
+      try {
+        const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        anunciosData = data.anuncios;
+        const swiperWrapper = document.querySelector('.swiper-wrapper');
+
+        // Limpiar slides existentes antes de volver a cargarlos
+        swiperWrapper.innerHTML = '';
+        
+        if (anunciosData.length === 0) {
+          // Si no hay anuncios, crear un slide especial y un objeto de datos falso para evitar errores
+          const slide = document.createElement('div');
+          slide.classList.add('swiper-slide');
+          
+          const img = document.createElement('img');
+          img.src = "sin anuncios.png"; // Usar la imagen de aviso
+          img.alt = "Sin anuncios";
+          
+          const overlay = document.createElement('div');
+          overlay.classList.add('overlay');
+          
+          slide.appendChild(img);
+          slide.appendChild(overlay);
+          swiperWrapper.appendChild(slide);
+
+          // 📌 Creando un objeto de datos simulado con todas las claves
+          anunciosData = [{ 
+            titulo: "Sin anuncios", 
+            descripcion: "0", 
+            url: "sin anuncios.png", 
+            comentarios: "", 
+            DeleteURL: "", 
+            Autor: "", 
+            Correo: "", 
+            Fecha: "" 
+          }];
+
+        } else {
+          // Si hay anuncios, crear los slides normales
+          anunciosData.forEach((anuncio) => {
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
+            slide.dataset.anuncio = JSON.stringify(anuncio);
+            
+            const img = document.createElement('img');
+            img.src = anuncio.url;
+            img.alt = "";
+            
+            const overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            
+            slide.appendChild(img);
+            slide.appendChild(overlay);
+            swiperWrapper.appendChild(slide);
+          });
+        }
+        
+        // Si Swiper ya existe, lo destruimos antes de crear uno nuevo
+        if (swiperInstance) {
+          swiperInstance.destroy(true, true);
+        }
+
+        swiperInstance = new Swiper('.swiper', {
+          loop: true,
+          direction: 'horizontal',
+          slidesPerView: 1,
+          spaceBetween: 10
+        });
+        
+        // La lógica de restaurar el índice solo se ejecuta si hay slides reales
+        if (anunciosData.length > 0) {
+          const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
+          const newTotalSlides = anunciosData.length;
+          const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
+          swiperInstance.slideToLoop(newIndex, 0);
+        }
+
+        // Enviar datos al primer anuncio (o al anuncio falso)
+        enviarDatosAAppInventor(swiperInstance ? swiperInstance.realIndex : 0);
+
+        swiperInstance.on('slideChange', () => {
+          const realIndex = swiperInstance.realIndex;
+          enviarDatosAAppInventor(realIndex);
+        });
+
+      } catch (error) {
+        console.error("Error al cargar las imágenes:", error);
+      }
+    }
+
+    function enviarDatosAAppInventor(index) {
+      if (window.AppInventor && anunciosData[index]) {
+        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[index]));
+      }
+    }
+
+    function recargarDatos() {
+      cargarImagenes();
+    }
+
     cargarImagenes();
-  }
-
-  cargarImagenes();
-</script>
+  </script>
+</body>
+</html>
