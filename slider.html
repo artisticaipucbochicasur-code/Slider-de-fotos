@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,9 +40,6 @@
 <body>
   <div class="swiper">
     <div class="swiper-wrapper"></div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -77,11 +74,9 @@
 
         const swiper = new Swiper('.swiper', {
           loop: true,
-          direction: 'vertical', // 📌 vertical para celular
-          pagination: { el: '.swiper-pagination', clickable: true },
-          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+          direction: 'horizontal', // 📌 desliza horizontal
           slidesPerView: 1,
-          spaceBetween: 10,
+          spaceBetween: 10
         });
 
         // 📌 Enviar el primer anuncio
