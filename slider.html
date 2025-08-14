@@ -60,14 +60,13 @@
         // Limpiar slides existentes antes de volver a cargarlos
         swiperWrapper.innerHTML = '';
         
-        // 📌 NUEVA LÓGICA: Verificar si hay anuncios
         if (anunciosData.length === 0) {
-          // Si no hay anuncios, crear un slide especial
+          // Si no hay anuncios, crear un slide especial y un objeto de datos falso para evitar errores
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
           
           const img = document.createElement('img');
-          img.src = "sin anuncios.png"; // 📌 Usar la imagen de aviso
+          img.src = "sin anuncios.png"; // Usar la imagen de aviso
           img.alt = "Sin anuncios";
           
           const overlay = document.createElement('div');
@@ -77,7 +76,7 @@
           slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
 
-          // Crear un anuncio de datos de App Inventor para este caso
+          // Crear un objeto de datos simulado para que App Inventor no reciba una lista vacía
           anunciosData = [{ titulo: "Sin anuncios", descripcion: "0", comentarios: "" }];
 
         } else {
@@ -111,8 +110,8 @@
           slidesPerView: 1,
           spaceBetween: 10
         });
-
-        // 📌 La lógica de restaurar el índice ya no es necesaria si no hay slides
+        
+        // La lógica de restaurar el índice solo se ejecuta si hay slides reales
         if (anunciosData.length > 0) {
           const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
           const newTotalSlides = anunciosData.length;
@@ -120,6 +119,7 @@
           swiperInstance.slideToLoop(newIndex, 0);
         }
 
+        // Enviar datos al primer anuncio (o al anuncio falso)
         enviarDatosAAppInventor(swiperInstance ? swiperInstance.realIndex : 0);
 
         swiperInstance.on('slideChange', () => {
