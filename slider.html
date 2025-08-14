@@ -61,12 +61,12 @@
         swiperWrapper.innerHTML = '';
         
         if (anunciosData.length === 0) {
-          // Si no hay anuncios, crear un slide especial y un objeto de datos falso para evitar errores
+          // Si no hay anuncios, crear un slide especial y un objeto de datos falso
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
           
           const img = document.createElement('img');
-          img.src = "sin anuncios.png"; // Usar la imagen de aviso
+          img.src = "https://drive.google.com/uc?export=view&id=1hYozQIOL3ZWuuV9qRcKp-ZOK7VShqLDk"; // 📌 Usar la URL de Google Drive
           img.alt = "Sin anuncios";
           
           const overlay = document.createElement('div');
@@ -80,12 +80,12 @@
           anunciosData = [{ 
             titulo: "sin anuncio", 
             descripcion: "sin anuncio", 
-            url: "sin anuncios.png", 
+            url: "https://drive.google.com/uc?export=view&id=1hYozQIOL3ZWuuV9qRcKp-ZOK7VShqLDk", 
             comentarios: "sin anuncio", 
             DeleteURL: "", 
-            Autor: "", 
-            Correo: "", 
-            Fecha: "" 
+            Autor: "sin anuncio", 
+            Correo: "sin anuncio", 
+            Fecha: "sin anuncio" 
           }];
 
         } else {
