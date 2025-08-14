@@ -57,17 +57,20 @@
         anunciosData = data.anuncios;
         const swiperWrapper = document.querySelector('.swiper-wrapper');
 
+        const currentIndex = swiperInstance ? swiperInstance.realIndex : 0; // 📌 Guardar el índice actual
+        const newTotalSlides = anunciosData.length;
+
         // Limpiar slides existentes antes de volver a cargarlos
         swiperWrapper.innerHTML = '';
         
-        if (anunciosData.length === 0) {
-          // Si no hay anuncios, crear un slide especial y un objeto de datos falso
+        anunciosData.forEach((anuncio) => {
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
+          slide.dataset.anuncio = JSON.stringify(anuncio);
           
           const img = document.createElement('img');
-          img.src = "https://drive.google.com/uc?export=view&id=1hYozQIOL3ZWuuV9qRcKp-ZOK7VShqLDk"; // 📌 Usar la URL de Google Drive
-          img.alt = "Sin anuncios";
+          img.src = anuncio.url;
+          img.alt = "";
           
           const overlay = document.createElement('div');
           overlay.classList.add('overlay');
@@ -75,39 +78,8 @@
           slide.appendChild(img);
           slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
+        });
 
-          // 📌 Creando un objeto de datos simulado con todas las claves
-          anunciosData = [{ 
-            titulo: "sin anuncio", 
-            descripcion: "sin anuncio", 
-            url: "https://drive.google.com/uc?export=view&id=1hYozQIOL3ZWuuV9qRcKp-ZOK7VShqLDk", 
-            comentarios: "sin anuncio", 
-            DeleteURL: "", 
-            Autor: "sin anuncio", 
-            Correo: "sin anuncio", 
-            Fecha: "sin anuncio" 
-          }];
-
-        } else {
-          // Si hay anuncios, crear los slides normales
-          anunciosData.forEach((anuncio) => {
-            const slide = document.createElement('div');
-            slide.classList.add('swiper-slide');
-            slide.dataset.anuncio = JSON.stringify(anuncio);
-            
-            const img = document.createElement('img');
-            img.src = anuncio.url;
-            img.alt = "";
-            
-            const overlay = document.createElement('div');
-            overlay.classList.add('overlay');
-            
-            slide.appendChild(img);
-            slide.appendChild(overlay);
-            swiperWrapper.appendChild(slide);
-          });
-        }
-        
         // Si Swiper ya existe, lo destruimos antes de crear uno nuevo
         if (swiperInstance) {
           swiperInstance.destroy(true, true);
@@ -119,18 +91,15 @@
           slidesPerView: 1,
           spaceBetween: 10
         });
-        
-        // La lógica de restaurar el índice solo se ejecuta si hay slides reales
-        if (anunciosData.length > 0) {
-          const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
-          const newTotalSlides = anunciosData.length;
-          const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
-          swiperInstance.slideToLoop(newIndex, 0);
-        }
 
-        // Enviar datos al primer anuncio (o al anuncio falso)
-        enviarDatosAAppInventor(swiperInstance ? swiperInstance.realIndex : 0);
+        // 📌 Lógica para restaurar el índice sin errores
+        const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
+        swiperInstance.slideToLoop(newIndex, 0);
 
+        // 📌 Enviar el primer anuncio
+        enviarDatosAAppInventor(swiperInstance.realIndex);
+
+        // 📌 Enviar datos cada vez que cambia el slide
         swiperInstance.on('slideChange', () => {
           const realIndex = swiperInstance.realIndex;
           enviarDatosAAppInventor(realIndex);
@@ -155,3 +124,4 @@
   </script>
 </body>
 </html>
+
