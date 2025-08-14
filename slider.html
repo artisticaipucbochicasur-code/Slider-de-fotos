@@ -40,9 +40,6 @@
 <body>
   <div class="swiper">
     <div class="swiper-wrapper"></div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -67,21 +64,17 @@
           img.src = anuncio.url;
           img.alt = "";
 
-          const overlay = document.createElement('div');
-          overlay.classList.add('overlay');
-
           slide.appendChild(img);
-          slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
         });
 
         const swiper = new Swiper('.swiper', {
           loop: true,
-          direction: 'vertical', // 📌 vertical para celular
-          pagination: { el: '.swiper-pagination', clickable: true },
-          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+          direction: 'vertical', // 📌 Solo vertical
           slidesPerView: 1,
           spaceBetween: 10,
+          pagination: false, // ❌ Sin indicadores
+          navigation: false, // ❌ Sin flechas
         });
 
         // 📌 Enviar el primer anuncio
