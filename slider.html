@@ -66,7 +66,6 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
-    // Ahora 'anunciosData' será un array de objetos, no un solo objeto con arrays
     let anunciosData = [];
     let swiperInstance = null;
     const loader = document.getElementById('loader');
@@ -90,18 +89,13 @@
       swiperInstance.on('slideChange', () => {
         if (window.AppInventor && anunciosData.length > 0) {
           const realIndex = swiperInstance.realIndex;
-          // Enviar el objeto completo del anuncio a App Inventor
           window.AppInventor.setWebViewString(JSON.stringify(anunciosData[realIndex]));
         }
       });
       // Sincronizar el slider con el índice guardado
-      if (anunciosData.length > 0) {
-        const initialSlideIndex = Math.min(initialIndex, anunciosData.length - 1);
-        swiperInstance.slideToLoop(initialSlideIndex, 0);
-        if (window.AppInventor) {
-          // Enviar el primer objeto del anuncio a App Inventor
-          window.AppInventor.setWebViewString(JSON.stringify(anunciosData[initialSlideIndex]));
-        }
+      swiperInstance.slideToLoop(initialIndex, 0);
+      if (window.AppInventor && anunciosData.length > 0) {
+        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[initialIndex]));
       }
     }
 
@@ -114,25 +108,7 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
-        const newAnunciosData = [];
-
-        // Ahora, recorremos las URLs y construimos un array de objetos
-        if (data.url && data.url.length > 0) {
-          data.url.forEach((url, index) => {
-            const anuncio = {
-              titulo: data.titulo[index] || "",
-              descripcion: data.descripcion[index] || "",
-              comentarios: data.comentarios[index] || [],
-              url: url,
-              deleteurl: data.deleteurl[index] || "",
-              autor: data.autor[index] || "",
-              correo: data.correo[index] || "",
-              fecha: data.fecha[index] || "",
-              id: data.id[index] || ""
-            };
-            newAnunciosData.push(anuncio);
-          });
-        }
+        const newAnunciosData = data.anuncios;
         
         const swiperWrapper = document.querySelector('.swiper-wrapper');
         const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
@@ -160,8 +136,7 @@
           zoomContainer.classList.add('swiper-zoom-container');
           
           const img = document.createElement('img');
-          // Aquí se utiliza 'anuncio.url' que ya fue procesada y validada
-          img.src = anuncio.url; 
+          img.src = anuncio.url;
           img.alt = anuncio.titulo;
           
           zoomContainer.appendChild(img);
@@ -190,3 +165,4 @@
   </script>
 </body>
 </html>
+
