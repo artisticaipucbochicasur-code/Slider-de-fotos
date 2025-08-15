@@ -63,8 +63,6 @@
   </div>
   <div id="loader"><span class="spinner">⏳</span></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/pinch-zoom-js@2.3.5/dist/pinch-zoom.umd.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
@@ -81,22 +79,7 @@
         loop: true,
         direction: 'horizontal',
         slidesPerView: 1,
-        spaceBetween: 10,
-        // Deshabilitar Swiper mientras se hace zoom
-        on: {
-          touchStart: function() {
-            const currentSlide = this.slides[this.realIndex];
-            const currentImage = currentSlide.querySelector('img');
-            if (currentImage && currentImage.pinchZoom) {
-              if (currentImage.pinchZoom.scale > 1) {
-                this.allowTouchMove = false;
-              }
-            }
-          },
-          touchEnd: function() {
-            this.allowTouchMove = true;
-          }
-        }
+        spaceBetween: 10
       });
       swiperInstance.on('slideChange', () => {
         if (window.AppInventor && anunciosData.length > 0) {
@@ -149,9 +132,6 @@
           
           slide.appendChild(img);
           swiperWrapper.appendChild(slide);
-
-          // Inicializar pinch-to-zoom en cada imagen
-          const pinchZoomInstance = new PinchZoom.default(img, {});
         });
 
         // Re-inicializar Swiper con el índice anterior
