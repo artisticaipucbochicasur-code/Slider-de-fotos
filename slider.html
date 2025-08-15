@@ -143,6 +143,9 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
+        
+        // --- 1. CAMBIO: Cargar los datos directamente sin el `.anuncios` ---
+        // Este ajuste es necesario porque el script ahora devuelve un objeto JSON plano
         const newAnunciosData = data;
         
         const swiperWrapper = document.querySelector('.swiper-wrapper');
@@ -161,7 +164,8 @@
         // Limpiar slides existentes de forma eficiente
         swiperWrapper.innerHTML = '';
         
-        // Crear y agregar slides
+        // --- 2. CAMBIO: Recorrer el array de URLs para crear los slides ---
+        // Se asegura de que la URL exista antes de crear un slide
         if (anunciosData.url && anunciosData.url.length > 0) {
           anunciosData.url.forEach((url, index) => {
             const slide = document.createElement('div');
