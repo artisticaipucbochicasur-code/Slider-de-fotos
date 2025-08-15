@@ -66,7 +66,17 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
-    let anunciosData = [];
+    let anunciosData = {
+        titulo: [],
+        descripcion: [],
+        comentarios: [],
+        url: [],
+        deleteurl: [],
+        autor: [],
+        correo: [],
+        fecha: [],
+        id: []
+    };
     let swiperInstance = null;
     const loader = document.getElementById('loader');
 
@@ -87,15 +97,40 @@
         },
       });
       swiperInstance.on('slideChange', () => {
-        if (window.AppInventor && anunciosData.length > 0) {
+        if (window.AppInventor && anunciosData.titulo.length > 0) {
           const realIndex = swiperInstance.realIndex;
-          window.AppInventor.setWebViewString(JSON.stringify(anunciosData[realIndex]));
+          const currentAnuncio = {
+            titulo: anunciosData.titulo[realIndex] || "",
+            descripcion: anunciosData.descripcion[realIndex] || "",
+            comentarios: anunciosData.comentarios[realIndex] || [],
+            url: anunciosData.url[realIndex] || "",
+            deleteurl: anunciosData.deleteurl[realIndex] || "",
+            autor: anunciosData.autor[realIndex] || "",
+            correo: anunciosData.correo[realIndex] || "",
+            fecha: anunciosData.fecha[realIndex] || "",
+            id: anunciosData.id[realIndex] || ""
+          };
+          window.AppInventor.setWebViewString(JSON.stringify(currentAnuncio));
         }
       });
       // Sincronizar el slider con el índice guardado
-      swiperInstance.slideToLoop(initialIndex, 0);
-      if (window.AppInventor && anunciosData.length > 0) {
-        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[initialIndex]));
+      if (anunciosData.titulo.length > 0) {
+        const initialSlideIndex = Math.min(initialIndex, anunciosData.titulo.length - 1);
+        swiperInstance.slideToLoop(initialSlideIndex, 0);
+        if (window.AppInventor) {
+          const firstAnuncio = {
+            titulo: anunciosData.titulo[initialSlideIndex] || "",
+            descripcion: anunciosData.descripcion[initialSlideIndex] || "",
+            comentarios: anunciosData.comentarios[initialSlideIndex] || [],
+            url: anunciosData.url[initialSlideIndex] || "",
+            deleteurl: anunciosData.deleteurl[initialSlideIndex] || "",
+            autor: anunciosData.autor[initialSlideIndex] || "",
+            correo: anunciosData.correo[initialSlideIndex] || "",
+            fecha: anunciosData.fecha[initialSlideIndex] || "",
+            id: anunciosData.id[initialSlideIndex] || ""
+          };
+          window.AppInventor.setWebViewString(JSON.stringify(firstAnuncio));
+        }
       }
     }
 
@@ -108,7 +143,7 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
-        const newAnunciosData = data.anuncios;
+        const newAnunciosData = data;
         
         const swiperWrapper = document.querySelector('.swiper-wrapper');
         const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
@@ -127,25 +162,27 @@
         swiperWrapper.innerHTML = '';
         
         // Crear y agregar slides
-        anunciosData.forEach((anuncio) => {
-          const slide = document.createElement('div');
-          slide.classList.add('swiper-slide');
+        if (anunciosData.url && anunciosData.url.length > 0) {
+          anunciosData.url.forEach((url, index) => {
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
 
-          // Contenedor de zoom requerido por Swiper
-          const zoomContainer = document.createElement('div');
-          zoomContainer.classList.add('swiper-zoom-container');
-          
-          const img = document.createElement('img');
-          img.src = anuncio.url;
-          img.alt = anuncio.titulo;
-          
-          zoomContainer.appendChild(img);
-          slide.appendChild(zoomContainer);
-          swiperWrapper.appendChild(slide);
-        });
+            // Contenedor de zoom requerido por Swiper
+            const zoomContainer = document.createElement('div');
+            zoomContainer.classList.add('swiper-zoom-container');
+            
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = anunciosData.titulo[index] || "";
+            
+            zoomContainer.appendChild(img);
+            slide.appendChild(zoomContainer);
+            swiperWrapper.appendChild(slide);
+          });
+        }
 
         // Re-inicializar Swiper con el índice anterior
-        const newIndex = (currentIndex >= anunciosData.length) ? anunciosData.length - 1 : currentIndex;
+        const newIndex = (currentIndex >= anunciosData.url.length) ? anunciosData.url.length - 1 : currentIndex;
         initSwiper(newIndex < 0 ? 0 : newIndex);
         
         console.log("Anuncios cargados y Swiper actualizado.");
