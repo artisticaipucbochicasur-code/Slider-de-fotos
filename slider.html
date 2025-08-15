@@ -37,14 +37,23 @@
     }
     /* Estilos para el indicador de carga */
     #loader {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 24px;
-        text-align: center;
-        z-index: 10;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      z-index: 10;
+    }
+    /* Animación para el emoji del reloj de arena */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #loader .spinner {
+      display: inline-block;
+      animation: spin 1.5s linear infinite;
     }
   </style>
 </head>
@@ -52,7 +61,7 @@
   <div class="swiper">
     <div class="swiper-wrapper"></div>
   </div>
-  <div id="loader">Cargando anuncios...</div>
+  <div id="loader">Cargando anuncios <span class="spinner">⏳</span></div>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
