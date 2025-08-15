@@ -79,7 +79,12 @@
         loop: true,
         direction: 'horizontal',
         slidesPerView: 1,
-        spaceBetween: 10
+        spaceBetween: 10,
+        // Habilitar el módulo de zoom de Swiper
+        zoom: {
+          maxRatio: 3, // Zoom máximo
+          minRatio: 1, // Zoom mínimo
+        },
       });
       swiperInstance.on('slideChange', () => {
         if (window.AppInventor && anunciosData.length > 0) {
@@ -125,12 +130,17 @@
         anunciosData.forEach((anuncio) => {
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
+
+          // Contenedor de zoom requerido por Swiper
+          const zoomContainer = document.createElement('div');
+          zoomContainer.classList.add('swiper-zoom-container');
           
           const img = document.createElement('img');
           img.src = anuncio.url;
           img.alt = anuncio.titulo;
           
-          slide.appendChild(img);
+          zoomContainer.appendChild(img);
+          slide.appendChild(zoomContainer);
           swiperWrapper.appendChild(slide);
         });
 
