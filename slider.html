@@ -1,7 +1,7 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <style>
     body {
@@ -35,93 +35,114 @@
       padding: 0;
       box-sizing: border-box;
     }
+    /* Estilos para el indicador de carga */
+    #loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 24px;
+        text-align: center;
+        z-index: 10;
+    }
   </style>
 </head>
 <body>
   <div class="swiper">
     <div class="swiper-wrapper"></div>
   </div>
-  
+  <div id="loader">Cargando anuncios...</div>
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyY6m3H8WD494cnoQbNXwspsZtD1sGu97yio9mk9DTozGSuyo6gHXB1W6HArcpYfP2/exec";
     let anunciosData = [];
-    let swiperInstance = null; // Guardamos la instancia de Swiper aquí
+    let swiperInstance = null;
+    const loader = document.getElementById('loader');
 
+    // Función para inicializar Swiper
+    function initSwiper(initialIndex = 0) {
+      if (swiperInstance) {
+        swiperInstance.destroy(true, true);
+      }
+      swiperInstance = new Swiper('.swiper', {
+        loop: true,
+        direction: 'horizontal',
+        slidesPerView: 1,
+        spaceBetween: 10
+      });
+      swiperInstance.on('slideChange', () => {
+        if (window.AppInventor && anunciosData.length > 0) {
+          const realIndex = swiperInstance.realIndex;
+          window.AppInventor.setWebViewString(JSON.stringify(anunciosData[realIndex]));
+        }
+      });
+      // Sincronizar el slider con el índice guardado
+      swiperInstance.slideToLoop(initialIndex, 0);
+      if (window.AppInventor && anunciosData.length > 0) {
+        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[initialIndex]));
+      }
+    }
+
+    // Función para cargar las imágenes desde el script
     async function cargarImagenes() {
+      loader.style.display = 'block'; // Mostrar el loader
+
       try {
         const response = await fetch(`${SCRIPT_URL}?accion=listarAnuncios`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
-        anunciosData = data.anuncios;
+        const newAnunciosData = data.anuncios;
+        
         const swiperWrapper = document.querySelector('.swiper-wrapper');
+        const currentIndex = swiperInstance ? swiperInstance.realIndex : 0;
+        
+        // Comprobar si los datos han cambiado antes de actualizar
+        const areDataEqual = JSON.stringify(anunciosData) === JSON.stringify(newAnunciosData);
+        if (areDataEqual) {
+          console.log("Datos no han cambiado, no se actualiza la UI.");
+          loader.style.display = 'none';
+          return;
+        }
 
-        const currentIndex = swiperInstance ? swiperInstance.realIndex : 0; // 📌 Guardar el índice actual
-        const newTotalSlides = anunciosData.length;
-
-        // Limpiar slides existentes antes de volver a cargarlos
+        anunciosData = newAnunciosData;
+        
+        // Limpiar slides existentes de forma eficiente
         swiperWrapper.innerHTML = '';
         
+        // Crear y agregar slides
         anunciosData.forEach((anuncio) => {
           const slide = document.createElement('div');
           slide.classList.add('swiper-slide');
-          slide.dataset.anuncio = JSON.stringify(anuncio);
           
           const img = document.createElement('img');
           img.src = anuncio.url;
-          img.alt = "";
-          
-          const overlay = document.createElement('div');
-          overlay.classList.add('overlay');
+          img.alt = anuncio.titulo;
           
           slide.appendChild(img);
-          slide.appendChild(overlay);
           swiperWrapper.appendChild(slide);
         });
 
-        // Si Swiper ya existe, lo destruimos antes de crear uno nuevo
-        if (swiperInstance) {
-          swiperInstance.destroy(true, true);
-        }
-
-        swiperInstance = new Swiper('.swiper', {
-          loop: true,
-          direction: 'horizontal',
-          slidesPerView: 1,
-          spaceBetween: 10
-        });
-
-        // 📌 Lógica para restaurar el índice sin errores
-        const newIndex = (currentIndex >= newTotalSlides) ? newTotalSlides - 1 : currentIndex;
-        swiperInstance.slideToLoop(newIndex, 0);
-
-        // 📌 Enviar el primer anuncio
-        enviarDatosAAppInventor(swiperInstance.realIndex);
-
-        // 📌 Enviar datos cada vez que cambia el slide
-        swiperInstance.on('slideChange', () => {
-          const realIndex = swiperInstance.realIndex;
-          enviarDatosAAppInventor(realIndex);
-        });
+        // Re-inicializar Swiper con el índice anterior
+        const newIndex = (currentIndex >= anunciosData.length) ? anunciosData.length - 1 : currentIndex;
+        initSwiper(newIndex < 0 ? 0 : newIndex);
+        
+        console.log("Anuncios cargados y Swiper actualizado.");
 
       } catch (error) {
         console.error("Error al cargar las imágenes:", error);
+      } finally {
+        loader.style.display = 'none'; // Ocultar el loader
       }
     }
 
-    function enviarDatosAAppInventor(index) {
-      if (window.AppInventor && anunciosData[index]) {
-        window.AppInventor.setWebViewString(JSON.stringify(anunciosData[index]));
-      }
-    }
-
-    function recargarDatos() {
-      cargarImagenes();
-    }
-
+    // Expone la función de recarga para que App Inventor pueda llamarla
+    window.recargarDatos = cargarImagenes;
+    
+    // Iniciar la carga de datos al abrir la app
     cargarImagenes();
   </script>
 </body>
 </html>
-
